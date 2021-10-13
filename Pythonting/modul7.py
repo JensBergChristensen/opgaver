@@ -2,7 +2,7 @@
 from time import sleep
 
 #7.1 lav en liste og sort den
-"""
+
 print("Opgave 7.1 Sort a list\n")
 navne = ["Zack", "Xeno", "abe", "Bob", "Aalborg", "Gunar", "Kevin", "Silvan"]
 print("The list:", navne)
@@ -17,7 +17,7 @@ def howlong(e):
     return len(e)
 navne.sort(key=howlong)
 print("String Length:", navne)
-"""
+
 #7.2 gæt et tal
 """
 print("\n\nOpgave 7.2 Guess a number\n")
