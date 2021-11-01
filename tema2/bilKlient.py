@@ -24,6 +24,9 @@ while True:
         print("Ikke mere data.")
         break
 
+    if dekodet_pakke == "W":
+        print("fremad")
+
 
 
 

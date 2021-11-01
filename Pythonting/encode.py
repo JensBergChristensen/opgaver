@@ -1,11 +1,12 @@
 
 # 12.1
-
-tal = int(input("Indtast heltal: "))
+"""
+tal = input("Indtast: ")
 bi = bin(tal)
 hex = format(tal, "x")
 print("Binary: ", bi)
 print("Hex: ", hex)
+"""
 
 # 12.2
 seatning = input("Indtast sætning")
