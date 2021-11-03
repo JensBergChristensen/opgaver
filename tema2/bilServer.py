@@ -4,8 +4,8 @@ import pygame
 import socket as S
 
 # Make socket
-host = "10.31.132.201"
-port = 3500
+host = "10.31.132.155"
+port = 3000
 skt = S.socket(S.AF_INET, S.SOCK_DGRAM)
 
 # Py game ssetup
