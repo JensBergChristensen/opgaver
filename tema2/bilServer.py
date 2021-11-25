@@ -4,7 +4,8 @@ import pygame
 import socket as S
 
 # Make socket
-host = "10.31.132.155"
+#host = "10.31.132.155" #slotpi
+host = "10.31.129.237"
 port = 3000
 skt = S.socket(S.AF_INET, S.SOCK_DGRAM)
 
@@ -24,8 +25,6 @@ def SEND(tast):
 pakke = "hejsa"
 pakke = pakke.encode("UTF-8")
 
-
-
 W = b'W'
 A = b'A'
 S = b'S'
@@ -37,6 +36,9 @@ SA = b'SA'
 SD = b'SD'
 
 nul = b'0'
+
+# Create graphics
+pygame.Rect(0, 0, 75, 75)
 
 while not done:
         for event in pygame.event.get():
@@ -80,8 +82,20 @@ while not done:
         else:
             SEND(nul)
 
+        # Update graphic
+        if pressed[pygame.K_w]:
+            pass
+        if pressed[pygame.K_a]:
+            pass
+        if pressed[pygame.K_s]:
+            pass
+        if pressed[pygame.K_d]:
+            pass
 
 
+
+
+        pygame.display.flip()
         clock.tick(60)
 
 skt.close()

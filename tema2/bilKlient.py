@@ -82,7 +82,7 @@ while True:
         G.output(36, G.LOW)
         G.output(38, G.HIGH)
 
-        setfart(80, 50)
+        setfart(99, 99)
     # Kor bagud
     if info == "S":
         # Hojre
@@ -92,25 +92,25 @@ while True:
         G.output(36, G.HIGH)
         G.output(38, G.LOW)
 
-        setfart(80, 50)
+        setfart(99, 99)
     # Drej venstre
     if info == "A":
-        print("venstre")
+        setfart(80, 0)
     # Drej hojre
     if info == "D":
-        print("hojre")
+        setfart(0, 80)
     # Kor frem og til venstre
     if info == "WA":
-        print("frem venstre")
+        setfart(80, 30)
     # Kor frem og til hojre
     if info == "WD":
-        print("frem hojre")
+        setfart(30, 80)
     # Kor bagud og venstre
     if info == "SA":
-        print("bagud venstre")
+        setfart(80, 30)
     # Kor bagud og Hojre
     if info == "SD":
-        print("bagud hojre")
+        setfart(30, 80)
     # STOP
     if info == "0":
         setfart(0, 0)
