@@ -5,7 +5,8 @@ import socket as S
 import RPi.GPIO as G
 
 # Make socket
-host = "10.31.132.155"
+#host = "10.31.132.155" #slot?
+host = "10.31.129.237"
 port = 3000
 
 skt = S.socket(S.AF_INET, S.SOCK_DGRAM)
@@ -22,7 +23,7 @@ G.output(33, G.HIGH) # Enable
 G.output(40, G.LOW)
 G.output(37, G.HIGH)
 # Motor 1 start
-m1 = G.PWM(37, 50)
+m1 = G.PWM(33, 50)
 m1.start(0)
 
 # Motor 2 setup VENSTRE
@@ -34,7 +35,7 @@ G.output(32, G.HIGH) # Enable
 G.output(36, G.LOW)
 G.output(38, G.HIGH)
 # Motor 2 start
-m2 = G.PWM(38, 50)
+m2 = G.PWM(32, 50)
 m2.start(0)
 
 # Variabler
@@ -74,7 +75,7 @@ while True:
     # Styring:
     # Kor frem
     if info == "W":
-
+        print("frem")
         # Hojre
         G.output(40, G.LOW)
         G.output(37, G.HIGH)
