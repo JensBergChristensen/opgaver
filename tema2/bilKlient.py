@@ -5,8 +5,7 @@ import socket as S
 import RPi.GPIO as G
 
 # Make socket
-#host = "10.31.132.155" #slot?
-host = "10.31.129.237"
+host = "10.31.132.155"
 port = 3000
 
 skt = S.socket(S.AF_INET, S.SOCK_DGRAM)
@@ -75,7 +74,6 @@ while True:
     # Styring:
     # Kor frem
     if info == "W":
-        print("frem")
         # Hojre
         G.output(40, G.LOW)
         G.output(37, G.HIGH)
@@ -96,22 +94,22 @@ while True:
         setfart(99, 99)
     # Drej venstre
     if info == "A":
-        setfart(80, 0)
+        print("venstre")
     # Drej hojre
     if info == "D":
-        setfart(0, 80)
+        print("hojre")
     # Kor frem og til venstre
     if info == "WA":
-        setfart(80, 30)
+        print("frem venstre")
     # Kor frem og til hojre
     if info == "WD":
-        setfart(30, 80)
+        print("frem hojre")
     # Kor bagud og venstre
     if info == "SA":
-        setfart(80, 30)
+        print("bagud venstre")
     # Kor bagud og Hojre
     if info == "SD":
-        setfart(30, 80)
+        print("bagud hojre")
     # STOP
     if info == "0":
         setfart(0, 0)

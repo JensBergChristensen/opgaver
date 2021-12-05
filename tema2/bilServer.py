@@ -21,25 +21,18 @@ clock = pygame.time.Clock()
 def SEND(tast):
     skt.sendto(tast, (host, port))
 
-# Send data
-pakke = "hejsa"
-pakke = pakke.encode("UTF-8")
-
+# Data
 W = b'W'
 A = b'A'
 S = b'S'
 D = b'D'
-
 WA = b'WA'
 WD = b'WD'
 SA = b'SA'
 SD = b'SD'
-
 nul = b'0'
 
-# Create graphics
-pygame.Rect(0, 0, 75, 75)
-
+# Main loop
 while not done:
         for event in pygame.event.get():
                 # !!! GET EVENT !!!
@@ -47,9 +40,6 @@ while not done:
                         done = True
         # !!! GET KEYS !!!
         pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_UP]:
-            skt.sendto(pakke, (host, port))
-
         # W Frem
         if (pressed[pygame.K_w] and not pressed[pygame.K_a]) and (pressed[pygame.K_w] and not pressed[pygame.K_d]):
             SEND(W)
@@ -81,19 +71,6 @@ while not done:
             pass
         else:
             SEND(nul)
-
-        # Update graphic
-        if pressed[pygame.K_w]:
-            pass
-        if pressed[pygame.K_a]:
-            pass
-        if pressed[pygame.K_s]:
-            pass
-        if pressed[pygame.K_d]:
-            pass
-
-
-
 
         pygame.display.flip()
         clock.tick(60)
