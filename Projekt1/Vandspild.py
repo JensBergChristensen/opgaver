@@ -10,7 +10,7 @@ import sys
 
 import RPi.GPIO as GPIO
 
-#  Set Pullup mode on GPIO14 first.
+#  Set Pullup mode on GPIO14 and GPIO15
 GPIO_PIN_NUMBER1=14
 GPIO_PIN_NUMBER2=15
 GPIO.setmode(GPIO.BCM)
@@ -21,9 +21,7 @@ GPIO.setup(GPIO_PIN_NUMBER2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 temp1 = []
 temp2 = []
-check = []
 percent = 0
-count = 0
 
 # !!! FUNCTIONS !!!
 
@@ -55,30 +53,24 @@ def ds18b20_read_sensors():
 def readtempdata():
     temp1file = open("/home/pi/temp1file.txt", "r")
     temp2file = open("/home/pi/temp2file.txt", "r")
-    checkfile = open("/home/pi/checkfile.txt", "r")
 
     file_lines1 = temp1file.read()[1:]
     file_lines2 = temp2file.read()[1:]
-    file_lines3 = checkfile.read()[1:]
 
     one = file_lines1.split("\n")
     two = file_lines2.split("\n")
-    three = file_lines3.split("\n")
 
-    return one, two, three
+    return one, two
 
-def savetempdata(list1, list2, list3):
+def savetempdata(input1, input2):
     temp1file = open("/home/pi/temp1file.txt", "w")
     temp2file = open("/home/pi/temp2file.txt", "w")
-    checkfile = open("/home/pi/checkfile.txt", "w")
 
-    file_lines1 = "\n".join(map(str, list1))
-    file_lines2 = "\n".join(map(str, list2))
-    file_lines3 = "\n".join(map(str, list3))
+    file_lines1 = "\n".join(map(str, input1))
+    file_lines2 = "\n".join(map(str, input2))
 
     temp1file.write(file_lines1)
     temp2file.write(file_lines2)
-    checkfile.write(file_lines3)
 
     return
 
@@ -87,44 +79,62 @@ def getTemp(dataDict, sted):
     for k in sted: dataDict = dataDict[k]
     return dataDict
 
+# is float
+def isfloat(value):
+  try:
+    float(value)
+    return True
+  except ValueError:
+    return False
+
+
+# !!! START PROGRAM !!!
+
+getthetemps = readtempdata()
+temp1 = getthetemps[0]
+temp2 = getthetemps[1]
+# print("EEE", temp1)
+
 # !!! MAIN LOOP !!!
 
 while True:
 
-    getthetemps = readtempdata()
-    temp1 = getthetemps[0]
-    temp2 = getthetemps[1]
-    check = getthetemps[2]
-    print("EEE", temp1)
     # Run sensor read
     temp_readings = ds18b20_read_sensors()
     if '28-000798431dd0' in temp_readings:
         temp1.append(getTemp(temp_readings, ['28-000798431dd0', 'temp_c']))
-        print("TEMP1 LISTE: ", temp1)
+        # print("TEMP1 LISTE: ", temp1)
     if '28-000798431dd0' in temp_readings:
         temp2.append(getTemp(temp_readings, ['28-000598431a78', 'temp_c']))
-        print("TEMP2 LISTE: ", temp2)
+        # print("TEMP2 LISTE: ", temp2)
     else:
         print("fejl")
     # Save  temp data
-    savetempdata(temp1, temp2, check)
+    savetempdata(temp1, temp2)
 
     # debug
     for t in temp_readings:
         if not 'error' in temp_readings[t]:
             print(u"Device id '%s' reads %.3f +/- 0.5 °C" % (t, temp_readings[t]['temp_c']))
 
+    # Remove string from lists
+    temp1 = [float(x) for x in temp1 if isfloat(x)]
+    temp2 = [float(x) for x in temp2 if isfloat(x)]
+
     # Force lists to float
-    temp1 = list(map(float, temp1))
-    temp2 = list(map(float, temp2))
-    check = list(map(float, check))
+    # temp1 = list(map(float, temp1))
+    # temp2 = list(map(float, temp2))
 
     # Check temp1 list and temp2 list
-    if temp1[count] - 5.0 <= temp2[count] <= temp1[count] + 5.0:
-        check.append(0)
-    else:
-        check.append(1)
-    count += 1
+    count = 0
+    check = []
+    if len(temp1) > 0:
+        for n in temp1:
+            if temp1[count] - 5.0 <= temp2[count] <= temp1[count] + 5.0:
+                check.append(0)
+            else:
+                check.append(1)
+            count += 1
     print(check)
     if len(check) > 10:
         percent = round((check.count(1) / len(check))*100)
@@ -133,4 +143,4 @@ while True:
         print('list too short')
     if percent > 80:
         print("YOU ARE WASTING WATER")
-    time.sleep(0.5)
+    time.sleep(60)
