@@ -74,7 +74,7 @@ def savetempdata(input1, input2):
 
     return
 
-# For appending temp
+# For finding and appending temp
 def getTemp(dataDict, sted):
     for k in sted: dataDict = dataDict[k]
     return dataDict
