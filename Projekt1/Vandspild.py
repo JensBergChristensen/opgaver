@@ -3,12 +3,15 @@ import glob
 import time
 import os
 import sys
+import RPi.GPIO as GPIO
+from pca9632.controller import Controller
+
+c = Controller()
 
 #  An Example Reading from /sys/bus/w1/devices/<ds18b20-id>/w1_slave
 #  a6 01 4b 46 7f ff 0c 10 5c : crc=5c YES
 #  a6 01 4b 46 7f ff 0c 10 5c t=26375
 
-import RPi.GPIO as GPIO
 
 #  Set Pullup mode on GPIO14 and GPIO15
 GPIO_PIN_NUMBER1=14
@@ -101,14 +104,15 @@ while True:
 
     # Run sensor read
     temp_readings = ds18b20_read_sensors()
+
+    # Add temperature from each sensor to a list
     if '28-000798431dd0' in temp_readings:
         temp1.append(getTemp(temp_readings, ['28-000798431dd0', 'temp_c']))
         # print("TEMP1 LISTE: ", temp1)
     if '28-000798431dd0' in temp_readings:
         temp2.append(getTemp(temp_readings, ['28-000598431a78', 'temp_c']))
         # print("TEMP2 LISTE: ", temp2)
-    else:
-        print("fejl")
+
     # Save  temp data
     savetempdata(temp1, temp2)
 
@@ -143,4 +147,7 @@ while True:
         print('list too short')
     if percent > 80:
         print("YOU ARE WASTING WATER")
+        c.set_led(1,255)
+    else:
+        c.all_off()
     time.sleep(60)
