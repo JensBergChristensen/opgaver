@@ -14,10 +14,10 @@ en exception
 @author: HTH
 """
 
-def checkint(s):
+def checkint():
     run = True
     while run:
-        tal = input(s)
+        tal = input()
         if tal == "q" or tal == "Q":
             exit()
         try:
