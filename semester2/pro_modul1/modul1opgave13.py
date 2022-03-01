@@ -42,9 +42,17 @@ def create_book(li_of_dict):
 
 def delete_book(li_of_dict):
     show_library(li_of_dict)
-    x = checkint("Enter the number of the book to delete: ")
-    li_of_dict.pop(x)
-    save_data(li_of_dict)
+    y = len(li_of_dict)
+
+    while hej:
+        x = checkint("Enter the number of the book to delete: ")
+        try:
+            li_of_dict.pop(x)
+            save_data(li_of_dict)
+            hej = False
+        except e:
+            print("fuck dig")
+
 
 def checkint(s):
     run = True
