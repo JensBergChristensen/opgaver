@@ -17,21 +17,25 @@ from io import BytesIO
 from datetime import datetime
 import RPi.GPIO as GPIO
 
+# GPIO SETUP FOR PIR SENSOR
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(7, GPIO.IN)
 
-# CREATE WEBPAGE HTML
+# CREATE FOR LIVE STREAM
 PAGE="""\
 <html>
 <head>
-<title>picamera MJPEG streaming demo</title>
+<title>PiCamera livestream</title>
 </head>
 <body>
-<h1>PiCamera MJPEG Streaming Demo</h1>
+<h1>PiCamera livestream</h1>
 <img src="stream.mjpg" width="640" height="480" />
 </body>
 </html>
 """
 
-# CLASSES FOR LIVE STREAM
+# LIVESTREAM - GET OUTPUT FROM CAMERA
 class StreamingOutput(object):
     def __init__(self):
         self.frame = None
@@ -49,8 +53,10 @@ class StreamingOutput(object):
             self.buffer.seek(0)
         return self.buffer.write(buf)
 
+# LIVESTREAM - SEND DATA
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
+        # Find and make website content
         if self.path == '/':
             self.send_response(301)
             self.send_header('Location', '/index.html')
@@ -69,6 +75,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_header('Pragma', 'no-cache')
             self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
             self.end_headers()
+            # Send camera output to website
             try:
                 while True:
                     with output.condition:
@@ -88,16 +95,13 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_error(404)
             self.end_headers()
 
+# LIVESTREAM - LIVESTRAM SERVER CREATION
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-# GPIO SETUP FOR PIR SENSOR
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(7, GPIO.IN)
 
-# EMAIL VARIABLES SETUP
+# EMAIL - CONTENT AND VARIABLES SETUP
 subject='Security Alert: A motion has been detected'
 bodyText="""\
 Hi,
@@ -112,7 +116,7 @@ USERNAME='sem3projektgruppe4'
 PASSWORD='sqolkoitgiazafsc'
 RECIEVER_EMAIL='sem3projektgruppe4@gmail.com'
 
-# EMAIl FILENAME AND PATH
+# EMAIl - FILENAME AND PATH
 filename_part1="surveillance"
 file_ext=".mp4"
 now = datetime.now()
@@ -120,7 +124,7 @@ current_datetime = now.strftime("%d-%m-%Y_%H:%M:%S")
 filename=filename_part1+"_"+current_datetime+file_ext
 filepath="/home/pi/python_code/capture/"
 
-#EMAIL SEND FUNCTION
+#EMAIL - SEND FUNCTION
 def send_email():
   message=MIMEMultipart()
   message["From"]=USERNAME
@@ -149,7 +153,7 @@ def send_email():
   session.quit
   print("Email sent")
 
-# EMAIL DELETE VIDEO FILE FUNCTION
+# EMAIL - DELETE VIDEO FILE FUNCTION
 def remove_file():
   if os.path.exists("/home/pi/python_code/capture/newvideo.h264"):
     os.remove("/home/pi/python_code/capture/newvideo.h264")
@@ -161,44 +165,45 @@ def remove_file():
   else:
     print("file does not exist")
 
-# global variables
-output = StreamingOutput()
-
-# Define camera
+# DEFINE CAMEREA
 camera = picamera.PiCamera(resolution='640x480', framerate=24)
 
-def ayylama1():
-    #with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
-        #output = StreamingOutput()
+# LIVESTREAM - CREATE OUTPUT VARIABLE
+output = StreamingOutput()
+
+# LIVESTREAM - START STREAM FUNCTION
+def livestream_start():
     camera.start_recording(output, format='mjpeg', splitter_port=1)
+    # Output is used with StreamingOutput class
     try:
-        address = ('192.168.1.159', 8000)
+        address = ('192.168.87.190', 8000)
         server = StreamingServer(address, StreamingHandler)
         server.serve_forever()
     finally:
         camera.stop_recording()
 
-def ayylama2():
+# EMAIL - VIDEO RECORDING FROM CAMERA TO EMAIL FUNCTION
+def cam_email_start():
     while True:
         i = GPIO.input(7) #pir sensor
         if i==1:
             print("Motion Detected")
+            # Using splitter port 2 to avoid conflict with stream function
             camera.start_recording('/home/pi/python_code/capture/newvideo.h264', splitter_port=2)
             camera.wait_recording(timeout=10, splitter_port=2)
             camera.stop_recording(splitter_port=2)
             sleep(2)
             res=os.system("MP4Box -add /home/pi/python_code/capture/newvideo.h264 /home/pi/python_code/capture/newvideo.mp4")
             os.system("mv /home/pi/python_code/capture/newvideo.mp4 "+filepath+filename)
-            send_email()
+            send_email() # Call email send function
             sleep(2)
-            remove_file()
+            remove_file() # Remove video file from raspberyy when done
 
+# Create threads for livestream and email functions
+livestream_thread = Thread(target=livestream_start)
+cam_email_thread = Thread(target=cam_email_start)
 
-wow1 = Thread(target=ayylama1)
-wow2 = Thread(target=ayylama2)
-
-wow1.start()
-wow2.start()
-
-print("program started")
-
+# Start threads
+livestream_thread.start()
+cam_email_thread.start()
+print("Program started")
