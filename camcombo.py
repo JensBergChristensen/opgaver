@@ -176,7 +176,7 @@ def livestream_start():
     camera.start_recording(output, format='mjpeg', splitter_port=1)
     # Output is used with StreamingOutput class
     try:
-        address = ('192.168.87.190', 8000)
+        address = ('ENTER IP ADRESS', 8000)
         server = StreamingServer(address, StreamingHandler)
         server.serve_forever()
     finally:
