@@ -22,7 +22,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(7, GPIO.IN)
 
-# CREATE FOR LIVE STREAM
+# CREATE WEBPAGE FOR LIVE STREAM
 PAGE="""\
 <html>
 <head>
