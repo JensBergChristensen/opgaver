@@ -4,18 +4,18 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email import encoders
-
+from datetime import datetime
+# STREAM IMPORTS
 import io
-import picamera
 import logging
 import socketserver
 from threading import Condition
 from http import server
 from threading import Thread
-from time import sleep
-from io import BytesIO
-from datetime import datetime
+#GENRAL IMPORTS
 import RPi.GPIO as GPIO
+import picamera
+from time import sleep
 
 # GPIO SETUP FOR PIR SENSOR
 GPIO.setwarnings(False)
