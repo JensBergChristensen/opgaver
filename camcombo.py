@@ -102,13 +102,13 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 
 
 # EMAIL - CONTENT AND VARIABLES SETUP
-subject='Security Alert: A motion has been detected'
+subject='Picamera: Motion detected'
 bodyText="""\
-Hi,
-A motion has been detected in your room.
-Please check the attachement sent from rasperry pi security system.
+Hello,
+Motion detected by pir sensor.
+10 second video clip has been attached.
 Regards
-AS Tech-Workshop
+Gruppe 4 :)
 """
 SMTP_SERVER='smtp.gmail.com'
 SMTP_PORT=587
