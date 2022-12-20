@@ -11,11 +11,11 @@ import logging
 import socketserver
 from threading import Condition
 from http import server
-from threading import Thread
 #GENRAL IMPORTS
 import RPi.GPIO as GPIO
 import picamera
 from time import sleep
+from threading import Thread
 
 # GPIO SETUP FOR PIR SENSOR
 GPIO.setwarnings(False)
