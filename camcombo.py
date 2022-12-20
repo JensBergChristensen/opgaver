@@ -168,6 +168,9 @@ def remove_file():
 # DEFINE CAMEREA
 camera = picamera.PiCamera(resolution='640x480', framerate=24)
 
+# LIVESTREAM - CREATE OUTPUT VARIABLE
+output = StreamingOutput()
+
 def livestream_start():
     camera.start_recording(output, format='mjpeg', splitter_port=1)
     # Output is used with StreamingOutput class
