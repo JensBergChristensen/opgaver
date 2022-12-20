@@ -165,7 +165,7 @@ def remove_file():
   else:
     print("file does not exist")
 
-# DEFINE CAMEREA
+# DEFINE CAMERA
 camera = picamera.PiCamera(resolution='640x480', framerate=24)
 
 # LIVESTREAM - CREATE OUTPUT VARIABLE
