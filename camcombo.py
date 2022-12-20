@@ -11,7 +11,7 @@ import logging
 import socketserver
 from threading import Condition
 from http import server
-#GENRAL IMPORTS
+#OTHER IMPORTS
 import RPi.GPIO as GPIO
 import picamera
 from time import sleep
@@ -171,6 +171,7 @@ camera = picamera.PiCamera(resolution='640x480', framerate=24)
 # LIVESTREAM - CREATE OUTPUT VARIABLE
 output = StreamingOutput()
 
+# LIVESTREAM - START FUNCTION
 def livestream_start():
     camera.start_recording(output, format='mjpeg', splitter_port=1)
     # Output is used with StreamingOutput class
@@ -181,6 +182,7 @@ def livestream_start():
     finally:
         camera.stop_recording()
 
+# EMAIL - VIDEO RECORDING FROM CAMERA TO EMAIL FUNCTION
 def cam_email_start():
     while True:
         i = GPIO.input(7) #pir sensor
@@ -195,18 +197,13 @@ def cam_email_start():
             os.system("mv /home/pi/python_code/capture/newvideo.mp4 "+filepath+filename)
             send_email() # Call email send function
             sleep(2)
-            remove_file() # Remove video file from raspberyy when done
+            remove_file() # Remove video file from raspberry when done
 
 # Create threads for livestream and email functions
 livestream_thread = Thread(target=livestream_start)
 cam_email_thread = Thread(target=cam_email_start)
 
-livestream_thread = Thread(target=livestream_start)
-cam_email_thread = Thread(target=cam_email_start)
-
+# Start threads
 livestream_thread.start()
 cam_email_thread.start()
-
-
 print("program started")
-
