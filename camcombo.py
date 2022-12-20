@@ -167,9 +167,7 @@ output = StreamingOutput()
 # Define camera
 camera = picamera.PiCamera(resolution='640x480', framerate=24)
 
-def ayylama1():
-    #with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
-        #output = StreamingOutput()
+def livestream_start():
     camera.start_recording(output, format='mjpeg', splitter_port=1)
     try:
         address = ('192.168.1.159', 8000)
@@ -178,7 +176,7 @@ def ayylama1():
     finally:
         camera.stop_recording()
 
-def ayylama2():
+def cam_email_start():
     while True:
         i = GPIO.input(7) #pir sensor
         if i==1:
@@ -194,11 +192,12 @@ def ayylama2():
             remove_file()
 
 
-wow1 = Thread(target=ayylama1)
-wow2 = Thread(target=ayylama2)
+livestream_thread = Thread(target=livestream_start)
+cam_email_thread = Thread(target=cam_email_start)
 
-wow1.start()
-wow2.start()
+livestream_thread.start()
+cam_email_thread.start()
+
 
 print("program started")
 
